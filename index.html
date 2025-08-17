@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>¿Salimos?</title>
+<style>
+  :root{
+    --bg:#0f172a;      /* fondo */
+    --card:#111827;    /* tarjeta */
+    --txt:#e5e7eb;     /* texto */
+    --accent:#22c55e;  /* verde */
+    --accent2:#ef4444; /* rojo */
+    --btn:#1f2937;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100svh; display:grid; place-items:center;
+    background: radial-gradient(1200px 600px at 50% -10%, #1f2937 0%, #0f172a 55%, #0b1324 100%);
+    font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial;
+    color:var(--txt);
+  }
+  .card{
+    width:min(92vw,520px); background:linear-gradient(180deg,#111827dd,#0b1220ee);
+    border:1px solid #33415555; border-radius:24px; padding:28px; text-align:center;
+    box-shadow:0 20px 60px #0008, inset 0 1px 0 #ffffff10;
+    position:relative; overflow:hidden;
+  }
+  h1{font-size:28px; margin:4px 0 8px}
+  p{opacity:.9; margin:0 0 18px}
+  .tag{display:inline-block; padding:6px 12px; border-radius:999px; font-size:12px;
+       background:#ffffff10; border:1px solid #ffffff20; margin-bottom:10px}
+  .hearts{position:absolute; inset:0; pointer-events:none; opacity:.2; filter:blur(.4px)}
+  .btns{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:10px}
+  button{
+    appearance:none; border:1px solid #ffffff20; background:var(--btn); color:var(--txt);
+    padding:12px 18px; border-radius:14px; font-size:16px; cursor:pointer;
+    transition:transform .08s ease, background .2s ease, border-color .2s ease, opacity .2s ease;
+  }
+  button:active{transform:scale(.98)}
+  .yes{background:linear-gradient(180deg,#22c55e,#16a34a); border-color:#16a34a}
+  .no{background:linear-gradient(180deg,#ef4444,#b91c1c); border-color:#b91c1c; position:relative}
+  .footer{margin-top:14px; font-size:12px; opacity:.7}
+  .whatsapp{
+    display:none; margin-top:16px; text-decoration:none; color:white; font-weight:600;
+    background:#25D366; padding:12px 16px; border-radius:12px; border:0;
+    box-shadow:0 8px 20px #25d36644;
+  }
+</style>
+</head>
+<body>
+  <svg class="hearts" viewBox="0 0 300 150" preserveAspectRatio="none">
+    <defs>
+      <path id="h" d="M10,30 C10,15 30,10 35,25 C40,10 60,15 60,30 C60,50 35,60 35,60 C35,60 10,50 10,30 Z"/>
+    </defs>
+    <use href="#h" x="20"  y="10" fill="#ef4444"/>
+    <use href="#h" x="140" y="30" fill="#f97316"/>
+    <use href="#h" x="240" y="0"  fill="#22c55e"/>
+    <use href="#h" x="60"  y="70" fill="#3b82f6"/>
+    <use href="#h" x="210" y="90" fill="#eab308"/>
+  </svg>
+
+  <div class="card" id="card">
+    <span class="tag">tengo una propuesta 😈💕</span>
+    <h1 id="title">¿Te gustaría pasar una tarde de domingo conmigo?</h1>
+    <p id="copy">Prometo snacks, música chill y cero estrés. ¿Qué dices?</p>
+
+    <div class="btns">
+      <button class="yes" id="yesBtn">¡Sí, obvio! 💚</button>
+      <button class="no" id="noBtn">Mmm, no sé 🤔</button>
+    </div>
+
+    <a class="whatsapp" id="waBtn" target="_blank" rel="noopener">
+      Abrir WhatsApp para coordinar 💬
+    </a>
+
+    <div class="footer">Hecho con cariño ✨</div>
+  </div>
+
+<script>
+/* ====== PERSONALIZA ESTO ====== */
+const TU_NOMBRE = "💫";                 // aparece en el mensaje de WhatsApp
+const TU_WHATSAPP = "573001057461";     // pon tu número con indicativo país. Ej: 57 + número (Colombia)
+const MENSAJE_WA = "¡Claro! Quiero pasar este domingo contigo";
+/* =============================== */
+
+const yesBtn = document.getElementById('yesBtn');
+const noBtn  = document.getElementById('noBtn');
+const waBtn  = document.getElementById('waBtn');
+const card   = document.getElementById('card');
+
+yesBtn.addEventListener('click', () => {
+  confetti();
+  yesBtn.textContent = "¡Touch me! 🥳";
+  noBtn.style.display = 'none';
+  waBtn.style.display = 'inline-block';
+  const url = `https://wa.me/${TU_WHATSAPP}?text=${encodeURIComponent(MENSAJE_WA + " " + TU_NOMBRE)}`;
+  waBtn.href = url;
+});
+
+let dodgeCount = 0;
+noBtn.addEventListener('mouseenter', moveNo);
+noBtn.addEventListener('touchstart', moveNo, {passive:true});
+
+function moveNo(){
+  dodgeCount++;
+  const rect = card.getBoundingClientRect();
+  const btnRect = noBtn.getBoundingClientRect();
+  const pad = 12;
+  const x = Math.max(pad, Math.min(rect.width - btnRect.width - pad, Math.random()*(rect.width - btnRect.width - pad)));
+  const y = Math.max(60, Math.min(rect.height - btnRect.height - 20, Math.random()*(rect.height - btnRect.height - 20)));
+  noBtn.style.position = 'absolute';
+  noBtn.style.left = x + 'px';
+  noBtn.style.top  = y + 'px';
+  noBtn.textContent = dodgeCount > 2 ? "Ok ok 😅" : "Mmm, no sé 🤔";
+}
+
+/* confeti minimal */
+function confetti(){
+  const N = 120;
+  for(let i=0;i<N;i++){
+    const p = document.createElement('div');
+    const s = Math.random()*6+4;
+    p.style.position='fixed';
+    p.style.width=s+'px';
+    p.style.height=s+'px';
+    p.style.left=(Math.random()*100)+'vw';
+    p.style.top='-10px';
+    p.style.background=`hsl(${Math.random()*360},90%,60%)`;
+    p.style.borderRadius='2px';
+    p.style.pointerEvents='none';
+    p.style.transition='transform 1.2s ease-out, opacity 1.2s ease-out';
+    p.style.transform=`translateY(${(60+Math.random()*90)}vh) rotate(${Math.random()*720-360}deg)`;
+    p.style.opacity='0';
+    document.body.appendChild(p);
+    requestAnimationFrame(()=>{ p.style.opacity='1'; });
+    setTimeout(()=>{ p.remove(); }, 1400 + Math.random()*400);
+  }
+}
+</script>
+</body>
+</html>
