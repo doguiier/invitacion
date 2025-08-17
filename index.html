@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Invitación Especial</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+      text-align: center;
+      background: #0a1f44; /* Fondo azul oscuro */
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    h1 {
+      color: #fff;
+      font-size: 28px;
+      margin-bottom: 20px;
+      animation: fadeIn 2s ease-in-out;
+    }
+    p {
+      color: #fff;
+      font-size: 18px;
+      margin-bottom: 30px;
+      animation: fadeIn 3s ease-in-out;
+    }
+    .btn {
+      padding: 15px 25px;
+      margin: 10px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: bold;
+      transition: transform 0.2s ease, background 0.3s;
+      box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+    }
+    .btn:hover {
+      transform: scale(1.1);
+    }
+    .yes {
+      background-color: #4CAF50;
+      color: white;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    .no {
+      background-color: #f44336;
+      color: white;
+      position: relative; /* empieza normal */
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    /* Corazones flotando */
+    .heart {
+      position: absolute;
+      color: rgba(255,255,255,0.7);
+      font-size: 20px;
+      animation: float 6s linear infinite;
+    }
+    @keyframes float {
+      0% { transform: translateY(100vh) scale(0.8); opacity: 1; }
+      100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <h1>🌸 ¿Te gustaría pasar una tarde de domingo conmigo? 🌸</h1>
+  <p>Prometo que será especial ✨💖</p>
+
+  <button class="btn yes" onclick="window.location.href='https://wa.me/573001057461?text=¡Claro!%20Quiero%20pasar%20ese%20domingo%20contigo'">Sí 💕</button>
+  <button id="noBtn" class="btn no">No 😔</button>
+
+  <!-- Corazones flotantes -->
+  <script>
+    // Efecto corazones
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.innerHTML = "❤";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.fontSize = Math.random() * 20 + 15 + "px";
+      heart.style.animationDuration = (Math.random() * 3 + 3) + "s";
+      document.body.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 6000);
+    }
+    setInterval(createHeart, 500);
+
+    // Botón NO
+    const noBtn = document.getElementById("noBtn");
+    const textos = ["¿Segura? 😢", "Piénsalo bien 🤔", "No me hagas esto 💔", "Anda, di que sí 😍", "Última oportunidad ✨"];
+    let index = 0;
+    let escapando = false;
+
+    function moverBoton() {
+      if (!escapando) {
+        noBtn.style.position = "absolute"; // lo ponemos flotante solo al primer toque
+        escapando = true;
+      }
+      // Cambiar texto
+      noBtn.textContent = textos[index % textos.length];
+      index++;
+
+      // Mover aleatoriamente
+      const x = Math.random() * (window.innerWidth - 120);
+      const y = Math.random() * (window.innerHeight - 60);
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+    }
+
+    noBtn.addEventListener("click", moverBoton);
+    noBtn.addEventListener("touchstart", moverBoton); // soporte móvil
+  </script>
+</body>
+</html>
